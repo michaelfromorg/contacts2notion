@@ -1,0 +1,29 @@
+{
+  "name": "contacts2notion",
+  "version": "1.0.0",
+  "description": "A script for syncing my (Google) contacts with Notion.",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "start": "node --loader ts-node/esm src/index.ts",
+    "build": "tsc",
+    "dev": "node --loader ts-node/esm src/index.ts --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "notion",
+    "contacts"
+  ],
+  "author": "michaelfromyeg",
+  "license": "MIT",
+  "dependencies": {
+    "@notionhq/client": "^2.2.15",
+    "@types/node": "^22.13.1",
+    "csv-parse": "^5.6.0",
+    "dotenv": "^16.4.7",
+    "typescript": "^5.7.3"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2"
+  }
+}

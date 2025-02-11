@@ -1,3 +1,9 @@
+### Custom
+
+data/*.csv
+
+### Node.gitignore
+
 # Logs
 logs
 *.log
