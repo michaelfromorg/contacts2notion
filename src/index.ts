@@ -9,6 +9,7 @@ interface SyncStats {
     name: number;
   };
   added: number;
+  updated: number;
   excluded: number;
 }
 
@@ -28,20 +29,20 @@ async function syncContacts(
       name: 0,
     },
     added: 0,
+    updated: 0,
     excluded: 0,
   };
-  // Parse Google Contacts
+
   const parser = new GoogleContactsParser(csvPath);
   const googleContacts = parser.parse();
 
-  // Get existing Notion contacts
   const notionClient = new NotionClient();
   const notionContacts = await notionClient.getAllContacts();
 
-  // Create an index of existing Notion contacts for faster lookup
+  // Create indices for existing Notion contacts
   const notionContactIndex = new Map<string, NotionContact>();
+  const notionContactByName = new Map<string, NotionContact>();
 
-  // Index by all email addresses and phone numbers
   notionContacts.forEach((contact) => {
     if (contact.primaryEmail)
       notionContactIndex.set(contact.primaryEmail.toLowerCase(), contact);
@@ -55,50 +56,116 @@ async function syncContacts(
         contact
       );
 
-    // Also index by name combination for cases without email/phone
     const nameLookup = `${contact.firstName.toLowerCase()}-${contact.lastName.toLowerCase()}`;
-    notionContactIndex.set(nameLookup, contact);
+    notionContactByName.set(nameLookup, contact);
   });
 
-  // Find contacts to add to Notion
-  const contactsToAdd = googleContacts.filter((gContact) => {
-    if (gContact.excludeFromSync) return false;
+  for (const gContact of googleContacts) {
+    if (gContact.excludeFromSync) {
+      stats.excluded++;
+      continue;
+    }
 
     // Check all possible matching criteria
     const emails = gContact.email.map((e) => e.toLowerCase());
     const phones = gContact.phone.map((p) => p.replace(/\D/g, "")); // Strip non-digits
     const nameLookup = `${gContact.firstName.toLowerCase()}-${gContact.lastName.toLowerCase()}`;
 
-    // Check if any identifier matches an existing contact
-    return ![...emails, ...phones, nameLookup].some((id) =>
-      notionContactIndex.has(id)
-    );
-  });
+    // Find existing contact
+    let existingContact: NotionContact | undefined;
+    let matchType: "email" | "phone" | "name" | undefined;
 
-  // Add new contacts to Notion
-  if (!options.dryRun) {
-    for (const contact of contactsToAdd) {
-      console.log("Adding", contact);
-      await notionClient.createContact({
-        firstName: contact.firstName,
-        lastName: contact.lastName,
-        company: contact.organization?.name,
-        title: contact.organization?.title,
-        primaryEmail: contact.email[0],
-        secondaryEmail: contact.email[1],
-        primaryPhone: contact.phone[0],
-        secondaryPhone: contact.phone[1],
-        lastSyncedAt: new Date().toISOString(),
-      });
+    // Check email matches
+    for (const email of emails) {
+      if (notionContactIndex.has(email)) {
+        existingContact = notionContactIndex.get(email);
+        matchType = "email";
+        stats.duplicates.email++;
+        break;
+      }
     }
-  } else {
-    contactsToAdd.forEach(console.log);
-  }
 
-  stats.added = contactsToAdd.length;
+    // Check phone matches
+    if (!existingContact) {
+      for (const phone of phones) {
+        if (notionContactIndex.has(phone)) {
+          existingContact = notionContactIndex.get(phone);
+          matchType = "phone";
+          stats.duplicates.phone++;
+          break;
+        }
+      }
+    }
+
+    // Check name match as last resort
+    if (!existingContact && notionContactByName.has(nameLookup)) {
+      existingContact = notionContactByName.get(nameLookup);
+      matchType = "name";
+      stats.duplicates.name++;
+    }
+
+    if (!options.dryRun) {
+      if (existingContact && existingContact.id) {
+        // Update existing contact
+        const updatedContact: NotionContact = {
+          firstName: gContact.firstName,
+          lastName: gContact.lastName,
+          company: gContact.organization?.name,
+          title: gContact.organization?.title,
+          primaryEmail: gContact.email[0],
+          secondaryEmail: gContact.email[1],
+          primaryPhone: gContact.phone[0],
+          secondaryPhone: gContact.phone[1],
+          birthday: gContact.birthday,
+          website: gContact.website?.[0],
+          lastSyncedAt: new Date().toISOString(),
+        };
+
+        if (options.verbose) {
+          console.log(
+            `Updating contact: ${updatedContact.firstName} ${updatedContact.lastName}`
+          );
+        }
+
+        await notionClient.updateContact(existingContact.id, updatedContact);
+        stats.updated++;
+      } else {
+        // Add new contact
+        const newContact: NotionContact = {
+          firstName: gContact.firstName,
+          lastName: gContact.lastName,
+          company: gContact.organization?.name,
+          title: gContact.organization?.title,
+          primaryEmail: gContact.email[0],
+          secondaryEmail: gContact.email[1],
+          primaryPhone: gContact.phone[0],
+          secondaryPhone: gContact.phone[1],
+          birthday: gContact.birthday,
+          website: gContact.website?.[0],
+          lastSyncedAt: new Date().toISOString(),
+        };
+
+        if (options.verbose) {
+          console.log(
+            `Adding new contact: ${newContact.firstName} ${newContact.lastName}`
+          );
+        }
+
+        await notionClient.createContact(newContact);
+        stats.added++;
+      }
+    } else if (options.verbose) {
+      console.log(
+        existingContact
+          ? `Would update: ${gContact.firstName} ${gContact.lastName}`
+          : `Would add: ${gContact.firstName} ${gContact.lastName}`
+      );
+    }
+  }
 
   console.log("Sync completed:");
   console.log(`- Added ${stats.added} new contacts`);
+  console.log(`- Updated ${stats.updated} existing contacts`);
   console.log(`- Found ${stats.duplicates.email} email matches`);
   console.log(`- Found ${stats.duplicates.phone} phone matches`);
   console.log(`- Found ${stats.duplicates.name} name matches`);
@@ -116,7 +183,7 @@ async function flush() {
 // syncContacts("./data/contacts.csv");
 
 async function main() {
-  await flush();
+  // await flush();
   await syncContacts("./data/contacts.csv", { verbose: true });
 }
 

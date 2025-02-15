@@ -13,11 +13,57 @@ export class NotionClient {
     if (!config.notion.databaseId) {
       throw new Error("Notion database ID is not set.");
     }
-    const response = await this.notion.databases.query({
-      database_id: config.notion.databaseId,
-    });
 
-    return response.results.map((page) => this.parseNotionPage(page));
+    const allContacts: NotionContact[] = [];
+    let hasMore = true;
+    let startCursor: string | undefined = undefined;
+
+    while (hasMore) {
+      const response = await this.notion.databases.query({
+        database_id: config.notion.databaseId,
+        start_cursor: startCursor,
+        page_size: 100, // Maximum allowed by Notion API
+      });
+
+      const contacts = response.results.map((page) =>
+        this.parseNotionPage(page)
+      );
+      allContacts.push(...contacts);
+
+      hasMore = response.has_more;
+      startCursor = response.next_cursor ?? undefined;
+
+      // Optional: Add a small delay to avoid rate limiting
+      if (hasMore) {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      }
+    }
+
+    return allContacts;
+  }
+
+  async createContact(contact: NotionContact): Promise<void> {
+    if (!config.notion.databaseId) {
+      throw new Error("Notion database ID is not set.");
+    }
+
+    const formattedContact = this.formatContactForNotion(contact);
+    await this.notion.pages.create(formattedContact);
+  }
+
+  async updateContact(pageId: string, contact: NotionContact): Promise<void> {
+    if (!config.notion.databaseId) {
+      throw new Error("Notion database ID is not set.");
+    }
+
+    const formattedContact = this.formatContactForNotion(contact);
+    // Remove parent property as it's not needed for updates
+    delete formattedContact.parent;
+
+    await this.notion.pages.update({
+      page_id: pageId,
+      properties: formattedContact.properties,
+    });
   }
 
   /**
@@ -75,22 +121,6 @@ export class NotionClient {
 
     return deletedCount;
   }
-
-  private propertyMap = {
-    firstName: "First_Name",
-    lastName: "Last_Name",
-    company: "Company",
-    department: "Department",
-    title: "Job_Title",
-    primaryEmail: "Primary_Email",
-    secondaryEmail: "Secondary_Email",
-    primaryPhone: "Primary_Phone",
-    secondaryPhone: "Secondary_Phone",
-    birthday: "Birthday",
-    address: "Address",
-    website: "Website",
-    lastSyncedAt: "Last_Synced",
-  };
 
   private formatContactForNotion(contact: NotionContact): any {
     return {
@@ -176,21 +206,18 @@ export class NotionClient {
               date: { start: contact.birthday },
             }
           : { type: "date", date: null },
+        Website: contact.website
+          ? {
+              type: "url",
+              url: contact.website,
+            }
+          : { type: "url", url: null },
         "Last Synced": {
           type: "date",
           date: { start: new Date().toISOString() },
         },
       },
     };
-  }
-
-  async createContact(contact: NotionContact): Promise<void> {
-    if (!config.notion.databaseId) {
-      throw new Error("Notion database ID is not set.");
-    }
-
-    const formattedContact = this.formatContactForNotion(contact);
-    await this.notion.pages.create(formattedContact);
   }
 
   private parseNotionPage(page: any): NotionContact {
@@ -206,6 +233,7 @@ export class NotionClient {
       primaryPhone: page.properties["Primary Phone"]?.phone_number,
       secondaryPhone: page.properties["Secondary Phone"]?.phone_number,
       birthday: page.properties["Birthday"]?.date?.start,
+      website: page.properties["Website"]?.url,
       lastSyncedAt: page.properties["Last Synced"]?.date?.start,
     };
   }

@@ -14,6 +14,51 @@ export class GoogleContactsParser {
     });
   }
 
+  parse(): GoogleContact[] {
+    return this.rawContacts
+      .filter(
+        (contact) =>
+          contact["First Name"]?.trim() || contact["Last Name"]?.trim()
+      )
+      .map((contact) => ({
+        firstName: contact["Middle Name"]
+          ? `${contact["First Name"]?.trim() || ""} ${contact[
+              "Middle Name"
+            ]?.trim()}`
+          : contact["First Name"]?.trim() || "",
+        lastName: contact["Last Name"]?.trim() || "",
+        organization: {
+          name: contact["Organization Name"]?.trim() || "",
+          title: contact["Organization Title"]?.trim() || "",
+          department: contact["Organization Department"]?.trim() || undefined,
+        },
+        email: this.parseEmails(contact),
+        phone: this.parsePhones(contact),
+        birthday: this.parseBirthday(contact["Birthday"]?.trim()),
+        address: this.parseAddress(contact),
+        website: this.parseWebsites(contact),
+        excludeFromSync: this.checkExcludeLabel(contact),
+      }));
+  }
+
+  private parseEmails(contact: any): string[] {
+    const emails: string[] = [];
+    for (let i = 1; i <= 4; i++) {
+      const email = contact[`E-mail ${i} - Value`];
+      if (email) emails.push(email?.trim());
+    }
+    return emails;
+  }
+
+  private parsePhones(contact: any): string[] {
+    const phones: string[] = [];
+    for (let i = 1; i <= 2; i++) {
+      const phone = contact[`Phone ${i} - Value`];
+      if (phone) phones.push(phone?.trim());
+    }
+    return phones;
+  }
+
   private parseBirthday(birthday: string): string | undefined {
     if (!birthday) return undefined;
 
@@ -21,6 +66,11 @@ export class GoogleContactsParser {
     if (birthday.startsWith("--")) {
       // Use a placeholder year that's clearly artificial
       return `1900${birthday.substring(2)}`;
+    }
+
+    if (birthday.length !== 10) {
+      console.warn("Expected birthday, but got:", birthday);
+      return undefined;
     }
 
     return birthday;
@@ -40,61 +90,21 @@ export class GoogleContactsParser {
     }
 
     return {
-      formatted: contact["Address 1 - Formatted"],
-      street: contact["Address 1 - Street"],
-      city: contact["Address 1 - City"],
-      region: contact["Address 1 - Region"],
-      postalCode: contact["Address 1 - Postal Code"],
-      country: contact["Address 1 - Country"],
+      formatted: contact["Address 1 - Formatted"]?.trim(),
+      street: contact["Address 1 - Street"]?.trim(),
+      city: contact["Address 1 - City"]?.trim(),
+      region: contact["Address 1 - Region"]?.trim(),
+      postalCode: contact["Address 1 - Postal Code"]?.trim(),
+      country: contact["Address 1 - Country"]?.trim(),
     };
   }
 
   private parseWebsites(contact: any): string[] {
     const websites: string[] = [];
     if (contact["Website 1 - Value"]) {
-      websites.push(contact["Website 1 - Value"]);
+      websites.push(contact["Website 1 - Value"]?.trim());
     }
     return websites;
-  }
-
-  parse(): GoogleContact[] {
-    return this.rawContacts
-      .filter((contact) => contact["First Name"] || contact["Last Name"])
-      .map((contact) => ({
-        firstName: contact["Middle Name"]
-          ? `${contact["First Name"] || ""} ${contact["Middle Name"]}`
-          : contact["First Name"] || "",
-        lastName: contact["Last Name"] || "",
-        organization: {
-          name: contact["Organization Name"] || "",
-          title: contact["Organization Title"] || "",
-          department: contact["Organization Department"] || undefined,
-        },
-        email: this.parseEmails(contact),
-        phone: this.parsePhones(contact),
-        birthday: this.parseBirthday(contact["Birthday"]),
-        address: this.parseAddress(contact),
-        website: this.parseWebsites(contact),
-        excludeFromSync: this.checkExcludeLabel(contact),
-      }));
-  }
-
-  private parseEmails(contact: any): string[] {
-    const emails: string[] = [];
-    for (let i = 1; i <= 4; i++) {
-      const email = contact[`E-mail ${i} - Value`];
-      if (email) emails.push(email);
-    }
-    return emails;
-  }
-
-  private parsePhones(contact: any): string[] {
-    const phones: string[] = [];
-    for (let i = 1; i <= 2; i++) {
-      const phone = contact[`Phone ${i} - Value`];
-      if (phone) phones.push(phone);
-    }
-    return phones;
   }
 
   private checkExcludeLabel(contact: any): boolean {
