@@ -139,6 +139,10 @@ class NotionClient:
         """Update an existing page's properties."""
         return await self._request("PATCH", f"/pages/{page_id}", json={"properties": properties})
 
+    async def get_page(self, page_id: str) -> dict[str, Any]:
+        """Get a single page by ID."""
+        return await self._request("GET", f"/pages/{page_id}")
+
     async def get_database(self, database_id: str) -> dict[str, Any]:
         """Get database metadata."""
         return await self._request("GET", f"/databases/{database_id}")

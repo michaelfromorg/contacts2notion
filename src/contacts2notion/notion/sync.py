@@ -180,15 +180,13 @@ class ContactSyncer:
 
                 if existing_page_id:
                     # Load existing Notion page to preserve Notion-only fields
-                    async for page in self.notion_client.query_database_all(self.database_id):
-                        if page["id"] == existing_page_id:
-                            notion_contact = Contact.from_notion_page(page)
-                            # Preserve Notion-only fields
-                            contact.hide_birthday = notion_contact.hide_birthday
-                            contact.tags = notion_contact.tags
-                            contact.notes = notion_contact.notes
-                            contact.last_contacted = notion_contact.last_contacted
-                            break
+                    page = await self.notion_client.get_page(existing_page_id)
+                    notion_contact = Contact.from_notion_page(page)
+                    # Preserve Notion-only fields
+                    contact.hide_birthday = notion_contact.hide_birthday
+                    contact.tags = notion_contact.tags
+                    contact.notes = notion_contact.notes
+                    contact.last_contacted = notion_contact.last_contacted
 
                 # Upsert to Notion
                 _, action = await self.sync_contact_to_notion(contact)
