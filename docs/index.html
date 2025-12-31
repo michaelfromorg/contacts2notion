@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>contacts2notion - Sync Google Contacts with Notion</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="https://github.com/michaelfromorg/contacts2notion">GitHub</a>
+    </nav>
+
+    <main>
+        <header>
+            <h1>contacts2notion</h1>
+            <p class="tagline">2-way sync between Google Contacts and Notion</p>
+        </header>
+
+        <section class="features">
+            <h2>Features</h2>
+            <ul>
+                <li><strong>2-way sync:</strong> Google Contacts ↔ Notion with intelligent conflict resolution</li>
+                <li><strong>OAuth2 authentication:</strong> Secure Google Contacts API integration</li>
+                <li><strong>Smart deduplication:</strong> Matches contacts by Google ID, email, phone, or name</li>
+                <li><strong>Notion-only fields:</strong> Add personal metadata that never syncs to Google</li>
+                <li><strong>Hide Birthday feature:</strong> Remove birthdays from Google while keeping in Notion</li>
+                <li><strong>Automated sync:</strong> GitHub Actions workflow runs weekly</li>
+            </ul>
+        </section>
+
+        <section class="cta">
+            <h2>Get Started</h2>
+            <p>contacts2notion is free, open-source software.</p>
+            <a href="https://github.com/michaelfromorg/contacts2notion" class="button">View on GitHub</a>
+            <a href="https://github.com/michaelfromorg/contacts2notion#readme" class="button secondary">Read Documentation</a>
+        </section>
+
+        <section class="install">
+            <h2>Quick Start</h2>
+            <pre><code>git clone https://github.com/michaelfromorg/contacts2notion.git
+cd contacts2notion
+uv sync
+uv run contacts2notion auth</code></pre>
+        </section>
+
+        <section class="about">
+            <h2>About</h2>
+            <p>contacts2notion is a personal project by <a href="https://michaeldemar.co">Michael Demar</a>. It's designed to keep your contacts synchronized between Google Contacts and Notion, with smart merging and Notion-only metadata fields.</p>
+            <p>All data stays between your Google account and your Notion workspace - no third-party servers involved.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Michael Demar | <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
+    </footer>
+</body>
+</html>

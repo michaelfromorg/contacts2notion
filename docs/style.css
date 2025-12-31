@@ -1,0 +1,333 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --secondary-color: #64748b;
+    --bg-color: #ffffff;
+    --text-color: #1e293b;
+    --text-light: #64748b;
+    --border-color: #e2e8f0;
+    --code-bg: #f1f5f9;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Navigation */
+nav {
+    display: flex;
+    gap: 2rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 2rem;
+}
+
+nav a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+nav a:hover {
+    color: var(--primary-color);
+}
+
+/* Main Content */
+main {
+    padding: 2rem 0;
+    min-height: calc(100vh - 200px);
+}
+
+/* Headers */
+h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+h2 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+/* Home Page Specific */
+header {
+    text-align: center;
+    padding: 3rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+header h1 {
+    font-size: 3.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.tagline {
+    font-size: 1.25rem;
+    color: var(--text-light);
+    margin-bottom: 0;
+}
+
+/* Sections */
+section {
+    margin-bottom: 2.5rem;
+}
+
+.features ul,
+section ul,
+section ol {
+    margin-left: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.features li,
+section li {
+    margin-bottom: 0.75rem;
+    line-height: 1.7;
+}
+
+section li strong {
+    color: var(--text-color);
+}
+
+/* Document Pages (Privacy, Terms) */
+.document {
+    max-width: 800px;
+}
+
+.document section {
+    margin-bottom: 3rem;
+}
+
+.updated {
+    color: var(--text-light);
+    font-style: italic;
+    margin-bottom: 2rem;
+}
+
+/* Call to Action */
+.cta {
+    text-align: center;
+    padding: 2rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 8px;
+    margin: 2rem 0;
+}
+
+.cta h2 {
+    border: none;
+    margin-top: 0;
+}
+
+/* Buttons */
+.button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    margin: 0.5rem;
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.button:hover {
+    background-color: var(--primary-hover);
+}
+
+.button.secondary {
+    background-color: var(--secondary-color);
+}
+
+.button.secondary:hover {
+    background-color: #475569;
+}
+
+/* Code Blocks */
+pre {
+    background-color: var(--code-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 1.5rem;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+}
+
+code {
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+    font-size: 0.9rem;
+    background-color: var(--code-bg);
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+}
+
+pre code {
+    background: none;
+    padding: 0;
+}
+
+/* Install Section */
+.install {
+    background-color: #f8fafc;
+    padding: 2rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+}
+
+.install h2 {
+    margin-top: 0;
+    border: none;
+}
+
+/* About Section */
+.about {
+    background-color: #fefce8;
+    border-left: 4px solid var(--warning-color);
+    padding: 1.5rem;
+    border-radius: 4px;
+    margin: 2rem 0;
+}
+
+.about h2 {
+    margin-top: 0;
+    border: none;
+}
+
+/* Note Section */
+.note {
+    background-color: #eff6ff;
+    border-left: 4px solid var(--primary-color);
+    padding: 1.5rem;
+    border-radius: 4px;
+    margin: 2rem 0;
+}
+
+.note p {
+    margin: 0;
+}
+
+/* Links */
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+/* Footer */
+footer {
+    border-top: 1px solid var(--border-color);
+    padding: 2rem 0;
+    margin-top: 4rem;
+    text-align: center;
+    color: var(--text-light);
+}
+
+footer a {
+    color: var(--text-light);
+    margin: 0 0.5rem;
+}
+
+footer a:hover {
+    color: var(--primary-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        padding: 0 15px;
+    }
+
+    header h1 {
+        font-size: 2.5rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    nav {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .cta,
+    .install,
+    .about,
+    .note {
+        padding: 1rem;
+    }
+
+    pre {
+        padding: 1rem;
+        font-size: 0.85rem;
+    }
+
+    .button {
+        display: block;
+        margin: 0.5rem 0;
+    }
+}
+
+/* Print Styles */
+@media print {
+    nav,
+    footer,
+    .cta,
+    .button {
+        display: none;
+    }
+
+    body {
+        max-width: 100%;
+        font-size: 12pt;
+    }
+
+    a {
+        color: var(--text-color);
+        text-decoration: underline;
+    }
+
+    h2 {
+        page-break-after: avoid;
+    }
+}

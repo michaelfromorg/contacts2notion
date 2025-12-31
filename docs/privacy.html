@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - contacts2notion</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="https://github.com/michaelfromorg/contacts2notion">GitHub</a>
+    </nav>
+
+    <main class="document">
+        <h1>Privacy Policy</h1>
+        <p class="updated">Last Updated: December 31, 2024</p>
+
+        <section>
+            <h2>Overview</h2>
+            <p>contacts2notion is a personal contact management tool that syncs your Google Contacts with your Notion database. This privacy policy explains how your data is handled.</p>
+        </section>
+
+        <section>
+            <h2>What Data We Access</h2>
+            <p>contacts2notion accesses the following data from your Google account:</p>
+            <ul>
+                <li>Contact names (first and last)</li>
+                <li>Email addresses</li>
+                <li>Phone numbers</li>
+                <li>Birthdays</li>
+                <li>Organizations (company, job title, department)</li>
+                <li>Physical addresses</li>
+                <li>Website URLs</li>
+            </ul>
+            <p>This data is accessed through the Google People API using OAuth 2.0 authentication.</p>
+        </section>
+
+        <section>
+            <h2>How We Use Your Data</h2>
+            <p>contacts2notion:</p>
+            <ul>
+                <li><strong>Reads</strong> your Google Contacts data via the Google People API</li>
+                <li><strong>Syncs</strong> this data to your personal Notion database</li>
+                <li><strong>Updates</strong> Google Contacts with information you add in Notion (if fields are empty in Google)</li>
+                <li><strong>Stores</strong> all data exclusively in your own Notion workspace</li>
+            </ul>
+
+            <p>We do <strong>NOT</strong>:</p>
+            <ul>
+                <li>Store your data on any third-party servers</li>
+                <li>Share your data with anyone</li>
+                <li>Sell or monetize your data in any way</li>
+                <li>Use your data for analytics or tracking</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Data Storage</h2>
+            <p>All contact data is stored in:</p>
+            <ol>
+                <li><strong>Your Google Contacts</strong> - Managed by Google's privacy policy</li>
+                <li><strong>Your Notion Database</strong> - Managed by Notion's privacy policy</li>
+            </ol>
+            <p>contacts2notion acts only as a sync tool between these two services. No contact data is stored by contacts2notion itself.</p>
+        </section>
+
+        <section>
+            <h2>Authentication & Security</h2>
+            <ul>
+                <li>OAuth 2.0 tokens are stored locally in your <code>.env</code> file or GitHub repository secrets</li>
+                <li>Refresh tokens allow the app to sync without repeated authorization</li>
+                <li>You can revoke access at any time through <a href="https://myaccount.google.com/permissions">Google Account Permissions</a></li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Third-Party Services</h2>
+            <p>contacts2notion interacts with:</p>
+            <ul>
+                <li><strong>Google People API</strong> - To read and update your contacts (<a href="https://policies.google.com/privacy">Privacy Policy</a>)</li>
+                <li><strong>Notion API</strong> - To sync contacts to your database (<a href="https://www.notion.so/Privacy-Policy-3468d120cf614d4c9014c09f6adc9091">Privacy Policy</a>)</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Data Retention</h2>
+            <ul>
+                <li>Contact data is retained in your Google Contacts and Notion database as long as you choose to keep it</li>
+                <li>Deleting the Notion integration or revoking Google permissions will stop all data access</li>
+                <li>No data is retained by contacts2notion after you stop using it</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>User Rights</h2>
+            <p>You have the right to:</p>
+            <ul>
+                <li>Access all your data (it's in your Google Contacts and Notion)</li>
+                <li>Export your data from Google or Notion at any time</li>
+                <li>Delete your data by removing it from Google Contacts or Notion</li>
+                <li>Revoke contacts2notion's access to Google Contacts at any time</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Open Source</h2>
+            <p>contacts2notion is open source software. You can:</p>
+            <ul>
+                <li>Review all source code at <a href="https://github.com/michaelfromorg/contacts2notion">GitHub</a></li>
+                <li>Verify exactly what data is accessed and how it's used</li>
+                <li>Self-host the application for complete control</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Children's Privacy</h2>
+            <p>contacts2notion is not intended for use by children under 13. We do not knowingly collect data from children.</p>
+        </section>
+
+        <section>
+            <h2>Changes to This Policy</h2>
+            <p>We may update this privacy policy from time to time. Changes will be reflected in the "Last Updated" date above and documented in the project's version history.</p>
+        </section>
+
+        <section>
+            <h2>Contact</h2>
+            <p>For questions or concerns about this privacy policy, please:</p>
+            <ul>
+                <li>Open an issue at <a href="https://github.com/michaelfromorg/contacts2notion/issues">GitHub</a></li>
+                <li>Contact the developer at <a href="https://michaeldemar.co">michaeldemar.co</a></li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Consent</h2>
+            <p>By using contacts2notion, you consent to this privacy policy and the handling of your data as described herein.</p>
+        </section>
+
+        <section class="note">
+            <p><strong>Note:</strong> This is a personal, self-hosted tool. When you run contacts2notion, all operations happen locally or between Google and Notion APIs directly. There are no intermediary servers collecting or processing your data.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Michael Demar | <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
+    </footer>
+</body>
+</html>

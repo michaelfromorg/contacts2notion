@@ -1,0 +1,33 @@
+name: Sync Google Contacts to Notion
+
+on:
+  schedule:
+    # Run weekly on Sunday at midnight UTC
+    # (Contacts don't change frequently, weekly is sufficient)
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+    # Allow manual trigger anytime
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Set up Python
+        run: uv python install
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Sync contacts (2-way)
+        run: uv run contacts2notion sync
+        env:
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+          TOKEN_V3: ${{ secrets.NOTION_TOKEN }}
+          DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
